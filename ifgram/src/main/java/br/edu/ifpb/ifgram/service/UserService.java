@@ -7,6 +7,8 @@ import br.edu.ifpb.ifgram.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -24,4 +26,24 @@ public class UserService {
         User salvo = repository.save(new User(request.nome(), request.email()));
         return UserResponse.from(salvo);
     }
-}
+    public UserResponse atualizarUsuario(UserRequest request) throws Exception {
+        Optional<User> usuario = repository.findByEmail(request.email());
+        if(usuario.isEmpty()){
+            throw new Exception("usuario nao existe na base de dados.");
+        }
+        User usuarioSalvo = usuario.get();
+        usuarioSalvo.setNome(request.nome());
+        repository.save(usuarioSalvo);
+
+        return UserResponse.from(usuarioSalvo);
+    }
+        public void deletarUsuario(UserRequest request) throws Exception {
+            Optional<User> usuario = repository.findByEmail(request.email());
+            if(usuario.isEmpty()) {
+                throw new Exception("Usuario nao encontrado!");
+            }
+            User usuarioDeletar = usuario.get();
+        }
+    }
+
+
